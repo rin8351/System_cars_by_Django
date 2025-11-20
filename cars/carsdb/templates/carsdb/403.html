@@ -1,0 +1,13 @@
+{% extends 'carsdb/base.html' %}
+
+{% block content %}
+<div style="text-align: center; padding: 50px;">
+    <h1 style="color: #dc3545; font-size: 72px;">403</h1>
+    <h2>Доступ запрещен</h2>
+    <p>У вас нет прав для выполнения этого действия.</p>
+    <p>Пожалуйста, обратитесь к администратору для получения необходимых прав.</p>
+    <br>
+    <a href="{% url 'index' %}" class="btn btn-primary">Вернуться на главную</a>
+</div>
+{% endblock %}
+

@@ -1,0 +1,86 @@
+{% extends "carsdb/base.html" %}
+
+{% block content %}
+
+<h2>Таблица деталей</h2>
+
+<div class="simple-little-table">
+    <table>
+        <thead>
+        <tr>
+            <th>№</th>
+            <th>Тип</th>
+            <th>Цена (₽)</th>
+            <th>Модель</th>
+            <th>Количество на авто</th>
+            <th>Параметры</th>
+            <th>Автор</th>
+            {% if perms.carsdb.change_parts or perms.carsdb.delete_parts %}
+            <th>Действия</th>
+            {% endif %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for p in partsm %}
+        <tr>
+            <td>{{ partsm.start_index|add:forloop.counter0 }}</td>
+            <td><strong>{{ p.type }}</strong></td>
+            <td>{{ p.price|floatformat:0 }} ₽</td>
+            <td>{{ p.model_p }}</td>
+            <td>{{ p.count_p }}</td>
+            <td>{{ p.params|truncatechars:30 }}</td>
+            <td>{{ p.author.username|default:'Неизвестно' }}</td>
+            {% if perms.carsdb.change_parts or perms.carsdb.delete_parts %}
+            <td>
+                <div style="display: flex; gap: 0.5rem; justify-content: center;">
+                    {% if perms.carsdb.change_parts %}
+                    <a href="{% url 'edit_parts' p.pk %}" class="c-button" style="padding: 0.5rem 1rem; font-size: 0.875rem; text-decoration: none;">
+                        ✏️ Редактировать
+                    </a>
+                    {% endif %}
+                    {% if perms.carsdb.delete_parts %}
+                    <a href="{% url 'delete_parts' p.pk %}" class="c-button" style="padding: 0.5rem 1rem; font-size: 0.875rem; text-decoration: none; background: linear-gradient(135deg, var(--error-color), #dc2626);">
+                        🗑️ Удалить
+                    </a>
+                    {% endif %}
+                </div>
+            </td>
+            {% endif %}
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="{% if perms.carsdb.change_parts or perms.carsdb.delete_parts %}8{% else %}7{% endif %}" class="text-center">Детали не найдены</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% if partsm.has_other_pages %}
+<div class="pagination-container">
+    <div class="pagination">
+        {% if partsm.has_previous %}
+            <a href="?page=1" class="pagination-btn" title="Первая страница">⏮️</a>
+            <a href="?page={{ partsm.previous_page_number }}" class="pagination-btn" title="Предыдущая">◀️</a>
+        {% else %}
+            <span class="pagination-btn disabled">⏮️</span>
+            <span class="pagination-btn disabled">◀️</span>
+        {% endif %}
+
+        <span class="pagination-info">
+            Страница <strong>{{ partsm.number }}</strong> из <strong>{{ partsm.paginator.num_pages }}</strong>
+            <span class="pagination-count">(Всего деталей: {{ partsm.paginator.count }})</span>
+        </span>
+
+        {% if partsm.has_next %}
+            <a href="?page={{ partsm.next_page_number }}" class="pagination-btn" title="Следующая">▶️</a>
+            <a href="?page={{ partsm.paginator.num_pages }}" class="pagination-btn" title="Последняя страница">⏭️</a>
+        {% else %}
+            <span class="pagination-btn disabled">▶️</span>
+            <span class="pagination-btn disabled">⏭️</span>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
+{% endblock content %}

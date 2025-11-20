@@ -1,0 +1,47 @@
+{% extends "carsdb/base.html" %}
+{% load cars_tag %}
+
+{% block content %}
+
+<h2>Редактировать деталь</h2>
+
+<div class="form-container">
+    <form method="POST">
+        {% csrf_token %}
+        
+        {% for f in form %}
+        <div class="form-group">
+            <label class="form-label" for="{{ f.id_for_label }}">{{ f.label }}:</label>
+            {{ f }}
+            {% if f.errors %}
+                <div class="form-error">
+                    {{ f.errors }}
+                </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+        
+        <div class="form-group text-center" style="display: flex; gap: 1rem; justify-content: center;">
+            <button class="c-button" type="submit">
+                💾 Сохранить изменения
+            </button>
+            <a href="{% url 'parts' %}" class="c-button" style="background: linear-gradient(135deg, var(--secondary-color), #475569); text-decoration: none;">
+                ❌ Отмена
+            </a>
+        </div>
+    </form>
+</div>
+
+<div class="card">
+    <h3>💡 Подсказки</h3>
+    <ul>
+        <li><strong>Тип:</strong> Укажите категорию детали (например, "Двигатель", "Тормоза", "Подвеска")</li>
+        <li><strong>Модель:</strong> Спецификация или модель детали</li>
+        <li><strong>Цена:</strong> Стоимость одной единицы в рублях</li>
+        <li><strong>Количество:</strong> Сколько таких деталей нужно на один автомобиль</li>
+        <li><strong>Параметры:</strong> Дополнительные характеристики детали</li>
+    </ul>
+</div>
+
+{% endblock content %}
+

@@ -1,0 +1,72 @@
+{% extends "carsdb/base.html" %}
+{% load cars_tag %}
+
+{% block content %}
+
+<h2>Добавить новый автомобиль</h2>
+
+<div class="form-container">
+    <form method="POST">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label class="form-label" for="{{ form.name.id_for_label }}">Название автомобиля:</label>
+            {{ form.name }}
+            {% if form.name.errors %}
+                <div class="form-error">{{ form.name.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" for="{{ form.margin.id_for_label }}">Допуск (%):</label>
+            {{ form.margin }}
+            {% if form.margin.errors %}
+                <div class="form-error">{{ form.margin.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">📦 Детали для автомобиля:</label>
+            <div class="checkbox-group">
+                {% for f in form.parts %}
+                <div class="checkbox-item">
+                    <label class="checkbox-label">
+                        {{ f }}
+                        <span class="checkbox-text">{{ f.label }}</span>
+                    </label>
+                </div>
+                {% endfor %}
+            </div>
+            {% if form.parts.errors %}
+                <div class="form-error">{{ form.parts.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="card" style="background: linear-gradient(135deg, #f0f9ff, #e0f2fe); border: 2px solid #3b82f6; margin-bottom: 1.5rem;">
+            <p style="margin: 0; font-size: 1rem; color: #1e40af;">
+                ℹ️ <strong>Проверьте данные перед созданием.</strong> Вы можете нажать <strong>"Отмена"</strong>, чтобы вернуться к таблице без сохранения.
+            </p>
+        </div>
+        
+        <div class="form-group text-center" style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <button class="c-button" type="submit" style="font-size: 1.1rem; padding: 0.75rem 2rem;">
+                ✅ Создать автомобиль
+            </button>
+            <a href="{% url 'cars' %}" class="c-button" style="background: linear-gradient(135deg, var(--secondary-color), #475569); text-decoration: none; font-size: 1.1rem; padding: 0.75rem 2rem;">
+                ❌ Отмена (вернуться без сохранения)
+            </a>
+        </div>
+    </form>
+</div>
+
+<div class="card">
+    <h3>💡 Как работает система</h3>
+    <ol>
+        <li><strong>Выберите детали</strong> - отметьте нужные детали для автомобиля</li>
+        <li><strong>Установите допуск</strong> - процент надбавки к стоимости деталей (например, 20% для получения прибыли)</li>
+        <li><strong>Система автоматически рассчитает</strong> итоговую цену автомобиля</li>
+    </ol>
+    <p><strong>Формула расчета:</strong> <em>Цена = (Сумма цен деталей × их количество) × (1 + допуск/100)</em></p>
+</div>
+
+{% endblock content %}

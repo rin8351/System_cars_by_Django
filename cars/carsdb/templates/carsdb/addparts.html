@@ -1,0 +1,53 @@
+{% extends "carsdb/base.html" %}
+{% load cars_tag %}
+
+{% block content %}
+
+<h2>Добавить новую деталь</h2>
+
+<div class="form-container">
+    <form method="POST">
+        {% csrf_token %}
+        
+        {% for f in form %}
+        <div class="form-group">
+            <label class="form-label" for="{{ f.id_for_label }}">{{ f.label }}:</label>
+            {{ f }}
+            {% if f.errors %}
+                <div class="form-error">
+                    {{ f.errors }}
+                </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+        
+        <div class="card" style="background: linear-gradient(135deg, #f0f9ff, #e0f2fe); border: 2px solid #3b82f6; margin-bottom: 1.5rem;">
+            <p style="margin: 0; font-size: 1rem; color: #1e40af;">
+                ℹ️ <strong>Проверьте данные перед добавлением.</strong> Вы можете нажать <strong>"Отмена"</strong>, чтобы вернуться к таблице без сохранения.
+            </p>
+        </div>
+        
+        <div class="form-group text-center" style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <button class="c-button" type="submit" style="font-size: 1.1rem; padding: 0.75rem 2rem;">
+                ✅ Добавить деталь
+            </button>
+            <a href="{% url 'parts' %}" class="c-button" style="background: linear-gradient(135deg, var(--secondary-color), #475569); text-decoration: none; font-size: 1.1rem; padding: 0.75rem 2rem;">
+                ❌ Отмена (вернуться без сохранения)
+            </a>
+        </div>
+    </form>
+</div>
+
+<div class="card">
+    <h3>💡 Подсказки</h3>
+    <ul>
+        <li><strong>Тип:</strong> Укажите категорию детали (например, "Двигатель", "Тормоза", "Подвеска")</li>
+        <li><strong>Модель:</strong> Спецификация или модель детали</li>
+        <li><strong>Цена:</strong> Стоимость одной единицы в рублях</li>
+        <li><strong>Количество:</strong> Сколько таких деталей нужно на один автомобиль</li>
+        <li><strong>Параметры:</strong> Дополнительные характеристики детали</li>
+    </ul>
+</div>
+
+
+{% endblock content %}

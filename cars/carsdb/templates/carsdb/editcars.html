@@ -1,0 +1,67 @@
+{% extends "carsdb/base.html" %}
+{% load cars_tag %}
+
+{% block content %}
+
+<h2>Редактировать автомобиль</h2>
+
+<div class="form-container">
+    <form method="POST">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label class="form-label" for="{{ form.name.id_for_label }}">Название автомобиля:</label>
+            {{ form.name }}
+            {% if form.name.errors %}
+                <div class="form-error">{{ form.name.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" for="{{ form.margin.id_for_label }}">Допуск (%):</label>
+            {{ form.margin }}
+            {% if form.margin.errors %}
+                <div class="form-error">{{ form.margin.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">📦 Детали для автомобиля:</label>
+            <div class="checkbox-group">
+                {% for f in form.parts %}
+                <div class="checkbox-item">
+                    <label class="checkbox-label">
+                        {{ f }}
+                        <span class="checkbox-text">{{ f.label }}</span>
+                    </label>
+                </div>
+                {% endfor %}
+            </div>
+            {% if form.parts.errors %}
+                <div class="form-error">{{ form.parts.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group text-center" style="display: flex; gap: 1rem; justify-content: center;">
+            <button class="c-button" type="submit">
+                💾 Сохранить изменения
+            </button>
+            <a href="{% url 'cars' %}" class="c-button" style="background: linear-gradient(135deg, var(--secondary-color), #475569); text-decoration: none;">
+                ❌ Отмена
+            </a>
+        </div>
+    </form>
+</div>
+
+<div class="card">
+    <h3>💡 Как работает система</h3>
+    <ol>
+        <li><strong>Выберите детали</strong> - отметьте нужные детали для автомобиля</li>
+        <li><strong>Установите допуск</strong> - процент надбавки к стоимости деталей (например, 20% для получения прибыли)</li>
+        <li><strong>Система автоматически рассчитает</strong> итоговую цену автомобиля</li>
+    </ol>
+    <p><strong>Формула расчета:</strong> <em>Цена = (Сумма цен деталей × их количество) × (1 + допуск/100)</em></p>
+</div>
+
+{% endblock content %}
+

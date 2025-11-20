@@ -1,0 +1,29 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>  
+<head>
+    <title>{{title}}</title>
+	<link type="text/css" href="{% static 'carsdb/css/style.css' %}" rel="stylesheet" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link rel="shortcut icon" href="{% static 'carsdb/img/main.ico' %}" type="image/x-icon"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<div class="modal">
+
+<form method="post">
+    {% csrf_token %}
+    {% for f in form %}
+    <p><label class="form-label" for="{{ f.id_for_label }}">{{f.label}}: </label>{{ f }}</p>
+    <div class ="form-error">{{ f.errors }}</div>
+    {% endfor %}
+
+    <button type = "submit" class="button">Registration</button>
+
+</form>
+</div>
+
+</body>
+</html>

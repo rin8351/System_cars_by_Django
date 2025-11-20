@@ -1,0 +1,68 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>  
+<head>
+    <title>Table of parts and cars</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link type="text/css" rel="stylesheet" href="{% static 'carsdb/css/styles.css' %}?v=1.1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+</head>
+<body>
+
+{% block mainmenu %}
+
+<div class="table-content">
+    <div class="left-chapters">
+        {% if user.is_authenticated %}
+            <div class="user-info">
+                <strong>Пользователь:</strong>
+                <a href="{% url 'profile' %}" class="profile-link">{{ user.username }}</a>
+                <a href="{% url 'logout' %}" class="logout-link">Выйти</a>
+            </div>
+        {% else %}
+            <div class="user-info">
+                <a href="{% url 'login' %}" class="login-link">Войти</a>
+            </div>
+        {% endif %}
+        
+        <ul id="leftchapters">
+            <li><a href="{% url 'index' %}">🏠 Дом</a></li>
+            <li><a href="{% url 'parts' %}">📦 Таблица деталей</a></li>
+            {% if perms.carsdb.add_parts %}
+            <li><a href="{% url 'add_parts' %}">➕ Добавить часть</a></li>
+            {% endif %}
+            <li><a href="{% url 'cars' %}">🚗 Таблица автомобилей</a></li>
+            {% if perms.carsdb.add_cars %}
+            <li><a href="{% url 'add_cars' %}">➕ Добавить машину</a></li>
+            {% endif %}
+            <li><a href="{% url 'acessor' %}">🔧 Таблица аксессуаров</a></li>
+            {% if user.is_staff %}
+                <li><a href="{% url 'admin:index' %}">⚙️ Панель администратора</a></li>
+            {% endif %}
+        </ul>
+    </div>
+
+{% endblock mainmenu %}
+
+    <div class="content">
+        <div class="content-text fade-in">
+            {% if messages %}
+                <div class="messages-container">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="close-btn" onclick="this.parentElement.style.display='none';">×</button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

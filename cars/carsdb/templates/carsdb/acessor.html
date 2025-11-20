@@ -1,0 +1,29 @@
+{% extends "carsdb/base.html" %}
+{% load cars_tag %}
+
+{% block content %}
+
+<h2>Таблица аксессуаров</h2>
+
+<table class="simple-little-table" cellpadding="1" cellspacing="1">
+    <thead>
+    <tr>
+        <th width="30">№ </th>
+        <th width="70">Name</th>
+        <th width="60">Part</th>
+        <th width="60">Price * Count</th>
+    </tr>
+</thead>
+<tbody>
+    {% for p in acess %}
+    <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ p.name }}</td>
+        <td>{{ p.part }}</td>
+        <td>{% price_count p.part_id %}</td>
+    </tr>
+    {% endfor %}
+</tbody>
+</table>
+
+{% endblock content %}
