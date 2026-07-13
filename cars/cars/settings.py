@@ -4,14 +4,14 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Загрузка переменных окружения из .env файла в корне проекта
+# Load environment variables from .env in the project root
 try:
     from dotenv import load_dotenv
-    # .env файл находится на два уровня выше (в корне проекта)
+    # .env is two levels above (project root)
     env_path = BASE_DIR.parent / '.env'
     load_dotenv(dotenv_path=env_path)
 except ImportError:
-    pass  # python-dotenv не установлен, используем системные переменные окружения
+    pass  # python-dotenv not installed; use system environment variables
 
 
 # Quick-start development settings - unsuitable for production
@@ -73,7 +73,7 @@ WSGI_APPLICATION = 'cars.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-# Используется SQLite по умолчанию для простоты локальной разработки
+# SQLite is used by default for simple local development
 USE_POSTGRES = os.environ.get('USE_POSTGRES', 'False') == 'True'
 
 if USE_POSTGRES:

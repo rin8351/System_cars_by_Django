@@ -3,13 +3,24 @@ from django.urls import reverse
 from django.contrib.auth import get_user_model
 
 class parts(models.Model):
-    type = models.CharField(max_length = 100)
-    price = models.IntegerField()
-    model_p = models.CharField(max_length = 100)
-    count_p = models.IntegerField()
-    params = models.CharField(max_length = 100)
-    author = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, 
-                               null=True, default=None, related_name='parts_author')
+    type = models.CharField(max_length=100, verbose_name='Type')
+    price = models.IntegerField(verbose_name='Price')
+    model_p = models.CharField(max_length=100, verbose_name='Model')
+    count_p = models.IntegerField(verbose_name='Quantity')
+    params = models.CharField(max_length=100, verbose_name='Parameters')
+    author = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.SET_NULL,
+        null=True,
+        default=None,
+        related_name='parts_author',
+        verbose_name='Author',
+    )
+
+    class Meta:
+        verbose_name = 'Part'
+        verbose_name_plural = 'Parts'
+        ordering = ['type', 'model_p']
 
     def __str__(self):
         return self.model_p
@@ -18,10 +29,15 @@ class parts(models.Model):
         return reverse('parts')
 
 class cars(models.Model):
-    name = models.CharField(max_length=100)
-    parts = models.ManyToManyField(parts, related_name='carss')
-    margin = models.IntegerField()
-    price = models.IntegerField(null=True, blank=True)
+    name = models.CharField(max_length=100, verbose_name='Name')
+    parts = models.ManyToManyField(parts, related_name='carss', verbose_name='Parts')
+    margin = models.IntegerField(verbose_name='Margin (%)')
+    price = models.IntegerField(null=True, blank=True, verbose_name='Price')
+
+    class Meta:
+        verbose_name = 'Car'
+        verbose_name_plural = 'Cars'
+        ordering = ['name']
 
     def __str__(self):
         return self.name
@@ -36,28 +52,31 @@ class cars(models.Model):
                 parts_list2 = parts.objects.filter(id__in=part_list.values('part'))
                 price = 0
                 for part in parts_list2:
-                    # Проверяем, что price и count_p существуют и корректны
+                    # Ensure price and count_p exist and are valid
                     if part.price is not None and part.count_p is not None:
                         price += part.price * part.count_p
                 
-                # Проверяем, что margin не None
+                # Ensure margin is not None
                 if self.margin is not None:
                     self.price = int(price * (1 + self.margin / 100))
                 else:
                     self.price = int(price)
             except (ValueError, TypeError, ZeroDivisionError) as e:
-                # В случае ошибки устанавливаем цену в 0
+                # On error, set price to 0
                 self.price = 0
         super().save(*args, **kwargs)
 
 
 class car_part(models.Model):
-    car = models.ForeignKey(cars, on_delete=models.CASCADE)
-    part = models.ForeignKey(parts, on_delete=models.CASCADE)
-    name = models.CharField(max_length=100)
+    car = models.ForeignKey(cars, on_delete=models.CASCADE, verbose_name='Car')
+    part = models.ForeignKey(parts, on_delete=models.CASCADE, verbose_name='Part')
+    name = models.CharField(max_length=100, verbose_name='Name')
 
     class Meta:
         unique_together = ['car', 'part']
+        verbose_name = 'Car–part link'
+        verbose_name_plural = 'Car–part links'
+        ordering = ['car', 'part']
 
     def __str__(self):
         return "{} {}".format(self.car.__str__(), self.part.__str__())

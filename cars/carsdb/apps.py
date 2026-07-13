@@ -6,4 +6,4 @@ class CarsdbConfig(AppConfig):
     name = 'carsdb'
 
     def ready(self):
-        import carsdb.signals  # Регистрируем сигналы
+        import carsdb.signals  # Register signals

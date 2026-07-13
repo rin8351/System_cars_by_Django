@@ -3,7 +3,7 @@
 
 {% block content %}
 
-<h2>Редактировать деталь</h2>
+<h2>Edit part</h2>
 
 <div class="form-container">
     <form method="POST">
@@ -23,25 +23,24 @@
         
         <div class="form-group text-center" style="display: flex; gap: 1rem; justify-content: center;">
             <button class="c-button" type="submit">
-                💾 Сохранить изменения
+                💾 Save changes
             </button>
             <a href="{% url 'parts' %}" class="c-button" style="background: linear-gradient(135deg, var(--secondary-color), #475569); text-decoration: none;">
-                ❌ Отмена
+                ❌ Cancel
             </a>
         </div>
     </form>
 </div>
 
 <div class="card">
-    <h3>💡 Подсказки</h3>
+    <h3>💡 Tips</h3>
     <ul>
-        <li><strong>Тип:</strong> Укажите категорию детали (например, "Двигатель", "Тормоза", "Подвеска")</li>
-        <li><strong>Модель:</strong> Спецификация или модель детали</li>
-        <li><strong>Цена:</strong> Стоимость одной единицы в рублях</li>
-        <li><strong>Количество:</strong> Сколько таких деталей нужно на один автомобиль</li>
-        <li><strong>Параметры:</strong> Дополнительные характеристики детали</li>
+        <li><strong>Type:</strong> Part category (e.g. "Engine", "Brakes", "Suspension")</li>
+        <li><strong>Model:</strong> Part specification or model name</li>
+        <li><strong>Price:</strong> Cost per unit</li>
+        <li><strong>Quantity:</strong> How many of this part are needed per car</li>
+        <li><strong>Parameters:</strong> Extra specifications</li>
     </ul>
 </div>
 
 {% endblock content %}
-

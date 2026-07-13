@@ -16,29 +16,29 @@
     <div class="left-chapters">
         {% if user.is_authenticated %}
             <div class="user-info">
-                <strong>Пользователь:</strong>
+                <strong>User:</strong>
                 <a href="{% url 'profile' %}" class="profile-link">{{ user.username }}</a>
-                <a href="{% url 'logout' %}" class="logout-link">Выйти</a>
+                <a href="{% url 'logout' %}" class="logout-link">Log out</a>
             </div>
         {% else %}
             <div class="user-info">
-                <a href="{% url 'login' %}" class="login-link">Войти</a>
+                <a href="{% url 'login' %}" class="login-link">Log in</a>
             </div>
         {% endif %}
         
         <ul id="leftchapters">
-            <li><a href="{% url 'index' %}">🏠 Дом</a></li>
-            <li><a href="{% url 'parts' %}">📦 Таблица деталей</a></li>
+            <li><a href="{% url 'index' %}">🏠 Home</a></li>
+            <li><a href="{% url 'parts' %}">📦 Parts table</a></li>
             {% if perms.carsdb.add_parts %}
-            <li><a href="{% url 'add_parts' %}">➕ Добавить часть</a></li>
+            <li><a href="{% url 'add_parts' %}">➕ Add part</a></li>
             {% endif %}
-            <li><a href="{% url 'cars' %}">🚗 Таблица автомобилей</a></li>
+            <li><a href="{% url 'cars' %}">🚗 Cars table</a></li>
             {% if perms.carsdb.add_cars %}
-            <li><a href="{% url 'add_cars' %}">➕ Добавить машину</a></li>
+            <li><a href="{% url 'add_cars' %}">➕ Add car</a></li>
             {% endif %}
-            <li><a href="{% url 'acessor' %}">🔧 Таблица аксессуаров</a></li>
+            <li><a href="{% url 'acessor' %}">🔧 Relations table</a></li>
             {% if user.is_staff %}
-                <li><a href="{% url 'admin:index' %}">⚙️ Панель администратора</a></li>
+                <li><a href="{% url 'admin:index' %}">⚙️ Admin panel</a></li>
             {% endif %}
         </ul>
     </div>

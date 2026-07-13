@@ -1,9 +1,9 @@
 """
-Management команда для загрузки демонстрационных данных в базу
+Management command to load demo data into the database.
 
-Использование:
+Usage:
     python manage.py load_demo_data
-    python manage.py load_demo_data --clear  # Удалить существующие данные
+    python manage.py load_demo_data --clear  # Delete existing data first
 """
 
 from django.core.management.base import BaseCommand
@@ -12,62 +12,62 @@ from carsdb.models import parts, cars, car_part
 
 
 class Command(BaseCommand):
-    help = 'Загружает демонстрационные данные в базу данных'
+    help = 'Loads demo data into the database'
 
     def add_arguments(self, parser):
         parser.add_argument(
             '--clear',
             action='store_true',
-            help='Удалить все существующие данные перед загрузкой',
+            help='Delete all existing data before loading',
         )
 
     def handle(self, *args, **options):
         if options['clear']:
-            self.stdout.write(self.style.WARNING('Удаление существующих данных...'))
+            self.stdout.write(self.style.WARNING('Deleting existing data...'))
             car_part.objects.all().delete()
             cars.objects.all().delete()
             parts.objects.all().delete()
-            self.stdout.write(self.style.SUCCESS('✓ Данные удалены'))
+            self.stdout.write(self.style.SUCCESS('Data deleted'))
 
-        self.stdout.write('Загрузка демонстрационных данных...')
+        self.stdout.write('Loading demo data...')
 
         with transaction.atomic():
-            # Создаем запчасти
+            # Create parts
             parts_data = [
-                # Двигатели
-                {'type': 'Двигатель', 'price': 150000, 'model_p': 'V6 3.0L', 'count_p': 1, 'params': '250 л.с.'},
-                {'type': 'Двигатель', 'price': 250000, 'model_p': 'V8 5.0L', 'count_p': 1, 'params': '450 л.с.'},
-                {'type': 'Двигатель', 'price': 180000, 'model_p': 'Inline-4 2.0L Turbo', 'count_p': 1, 'params': '300 л.с.'},
+                # Engines
+                {'type': 'Engine', 'price': 150000, 'model_p': 'V6 3.0L', 'count_p': 1, 'params': '250 hp'},
+                {'type': 'Engine', 'price': 250000, 'model_p': 'V8 5.0L', 'count_p': 1, 'params': '450 hp'},
+                {'type': 'Engine', 'price': 180000, 'model_p': 'Inline-4 2.0L Turbo', 'count_p': 1, 'params': '300 hp'},
                 
-                # Коробки передач
-                {'type': 'Коробка передач', 'price': 80000, 'model_p': 'АКПП 8-ступ', 'count_p': 1, 'params': 'Автомат'},
-                {'type': 'Коробка передач', 'price': 120000, 'model_p': 'Робот DSG-7', 'count_p': 1, 'params': 'Робот'},
-                {'type': 'Коробка передач', 'price': 60000, 'model_p': 'МКПП 6-ступ', 'count_p': 1, 'params': 'Механика'},
+                # Transmissions
+                {'type': 'Transmission', 'price': 80000, 'model_p': '8-speed AT', 'count_p': 1, 'params': 'Automatic'},
+                {'type': 'Transmission', 'price': 120000, 'model_p': 'DSG-7', 'count_p': 1, 'params': 'Dual-clutch'},
+                {'type': 'Transmission', 'price': 60000, 'model_p': '6-speed MT', 'count_p': 1, 'params': 'Manual'},
                 
-                # Кузовные детали
-                {'type': 'Кузов', 'price': 200000, 'model_p': 'Седан полный', 'count_p': 1, 'params': 'Сталь'},
-                {'type': 'Кузов', 'price': 280000, 'model_p': 'SUV полный', 'count_p': 1, 'params': 'Алюминий'},
-                {'type': 'Кузов', 'price': 220000, 'model_p': 'Купе спорт', 'count_p': 1, 'params': 'Углепластик'},
+                # Body
+                {'type': 'Body', 'price': 200000, 'model_p': 'Full sedan', 'count_p': 1, 'params': 'Steel'},
+                {'type': 'Body', 'price': 280000, 'model_p': 'Full SUV', 'count_p': 1, 'params': 'Aluminum'},
+                {'type': 'Body', 'price': 220000, 'model_p': 'Sport coupe', 'count_p': 1, 'params': 'Carbon fiber'},
                 
-                # Колеса
-                {'type': 'Колеса', 'price': 15000, 'model_p': 'R17 стандарт', 'count_p': 4, 'params': '205/55'},
-                {'type': 'Колеса', 'price': 25000, 'model_p': 'R19 спорт', 'count_p': 4, 'params': '245/40'},
-                {'type': 'Колеса', 'price': 35000, 'model_p': 'R21 премиум', 'count_p': 4, 'params': '275/35'},
+                # Wheels
+                {'type': 'Wheels', 'price': 15000, 'model_p': 'R17 standard', 'count_p': 4, 'params': '205/55'},
+                {'type': 'Wheels', 'price': 25000, 'model_p': 'R19 sport', 'count_p': 4, 'params': '245/40'},
+                {'type': 'Wheels', 'price': 35000, 'model_p': 'R21 premium', 'count_p': 4, 'params': '275/35'},
                 
-                # Салон
-                {'type': 'Салон', 'price': 50000, 'model_p': 'Тканевый базовый', 'count_p': 1, 'params': 'Ткань'},
-                {'type': 'Салон', 'price': 120000, 'model_p': 'Кожаный премиум', 'count_p': 1, 'params': 'Натур. кожа'},
-                {'type': 'Салон', 'price': 80000, 'model_p': 'Эко-кожа комфорт', 'count_p': 1, 'params': 'Эко-кожа'},
+                # Interior
+                {'type': 'Interior', 'price': 50000, 'model_p': 'Basic fabric', 'count_p': 1, 'params': 'Fabric'},
+                {'type': 'Interior', 'price': 120000, 'model_p': 'Premium leather', 'count_p': 1, 'params': 'Genuine leather'},
+                {'type': 'Interior', 'price': 80000, 'model_p': 'Comfort eco-leather', 'count_p': 1, 'params': 'Eco-leather'},
                 
-                # Электроника
-                {'type': 'Электроника', 'price': 30000, 'model_p': 'Базовая система', 'count_p': 1, 'params': 'ABS, ESP'},
-                {'type': 'Электроника', 'price': 80000, 'model_p': 'Мультимедиа премиум', 'count_p': 1, 'params': '10" экран, навигация'},
-                {'type': 'Электроника', 'price': 150000, 'model_p': 'Автопилот Level 2', 'count_p': 1, 'params': 'Адаптивный круиз'},
+                # Electronics
+                {'type': 'Electronics', 'price': 30000, 'model_p': 'Basic system', 'count_p': 1, 'params': 'ABS, ESP'},
+                {'type': 'Electronics', 'price': 80000, 'model_p': 'Premium multimedia', 'count_p': 1, 'params': '10" screen, navigation'},
+                {'type': 'Electronics', 'price': 150000, 'model_p': 'Autopilot Level 2', 'count_p': 1, 'params': 'Adaptive cruise'},
                 
-                # Дополнительно
-                {'type': 'Подвеска', 'price': 70000, 'model_p': 'Независимая многорычажная', 'count_p': 1, 'params': 'Адаптивная'},
-                {'type': 'Подвеска', 'price': 45000, 'model_p': 'МакФерсон стандарт', 'count_p': 1, 'params': 'Базовая'},
-                {'type': 'Тормоза', 'price': 40000, 'model_p': 'Дисковые вентилируемые', 'count_p': 1, 'params': '350мм'},
+                # Other
+                {'type': 'Suspension', 'price': 70000, 'model_p': 'Independent multi-link', 'count_p': 1, 'params': 'Adaptive'},
+                {'type': 'Suspension', 'price': 45000, 'model_p': 'MacPherson standard', 'count_p': 1, 'params': 'Basic'},
+                {'type': 'Brakes', 'price': 40000, 'model_p': 'Vented discs', 'count_p': 1, 'params': '350mm'},
             ]
 
             created_parts = []
@@ -75,34 +75,34 @@ class Command(BaseCommand):
                 part = parts.objects.create(**part_data)
                 created_parts.append(part)
             
-            self.stdout.write(self.style.SUCCESS(f'✓ Создано {len(created_parts)} запчастей'))
+            self.stdout.write(self.style.SUCCESS(f'Created {len(created_parts)} parts'))
 
-            # Создаем автомобили
+            # Create cars
             cars_data = [
                 {
-                    'name': 'Седан Стандарт',
+                    'name': 'Standard Sedan',
                     'margin': 15,
-                    'parts_indices': [2, 5, 6, 9, 12, 15, 19, 20]  # Экономичная комплектация
+                    'parts_indices': [2, 5, 6, 9, 12, 15, 19, 20]  # Economy trim
                 },
                 {
-                    'name': 'Седан Комфорт',
+                    'name': 'Comfort Sedan',
                     'margin': 20,
-                    'parts_indices': [0, 3, 6, 10, 14, 16, 18, 20]  # Средняя комплектация
+                    'parts_indices': [0, 3, 6, 10, 14, 16, 18, 20]  # Mid trim
                 },
                 {
-                    'name': 'SUV Премиум',
+                    'name': 'Premium SUV',
                     'margin': 25,
-                    'parts_indices': [1, 4, 7, 11, 13, 16, 17, 18, 20]  # Премиум
+                    'parts_indices': [1, 4, 7, 11, 13, 16, 17, 18, 20]  # Premium
                 },
                 {
-                    'name': 'Купе Спорт',
+                    'name': 'Sport Coupe',
                     'margin': 30,
-                    'parts_indices': [1, 4, 8, 10, 13, 16, 17, 18, 20]  # Спортивная
+                    'parts_indices': [1, 4, 8, 10, 13, 16, 17, 18, 20]  # Sport
                 },
                 {
-                    'name': 'Экономка Эконом',
+                    'name': 'Economy Compact',
                     'margin': 10,
-                    'parts_indices': [2, 5, 6, 9, 12, 15, 19, 20]  # Минимальная
+                    'parts_indices': [2, 5, 6, 9, 12, 15, 19, 20]  # Minimal
                 },
             ]
 
@@ -113,29 +113,28 @@ class Command(BaseCommand):
                     margin=car_data['margin']
                 )
                 
-                # Добавляем запчасти к автомобилю
+                # Add parts to the car
                 for idx in parts_indices:
                     if idx < len(created_parts):
                         part = created_parts[idx]
                         car.parts.add(part)
-                        # Создаем связь car_part
+                        # Create car_part link
                         car_part.objects.create(
                             car=car,
                             part=part,
                             name=car.name
                         )
                 
-                # Сохраняем автомобиль для пересчета цены
+                # Save car to recalculate price
                 car.save()
                 
                 self.stdout.write(
                     self.style.SUCCESS(
-                        f'✓ Создан автомобиль: {car.name} '
-                        f'(цена: {car.price:,} руб, маржа: {car.margin}%)'
+                        f'Created car: {car.name} '
+                        f'(price: ${car.price:,}, margin: {car.margin}%)'
                     )
                 )
 
-        self.stdout.write(self.style.SUCCESS('\n✅ Демонстрационные данные успешно загружены!'))
-        self.stdout.write(self.style.WARNING('\nТеперь вы можете войти в систему и просмотреть данные'))
-        self.stdout.write('Перейдите по адресу: http://127.0.0.1:8000/')
-
+        self.stdout.write(self.style.SUCCESS('\nDemo data loaded successfully!'))
+        self.stdout.write(self.style.WARNING('\nYou can now log in and browse the data'))
+        self.stdout.write('Go to: http://127.0.0.1:8000/')

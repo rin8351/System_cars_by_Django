@@ -2,18 +2,18 @@
 
 {% block content %}
 
-<h2>Таблица автомобилей</h2>
+<h2>Cars table</h2>
 
 <div class="simple-little-table">
     <table>
         <thead>
         <tr>
-            <th>№</th>
-            <th>Название</th>
-            <th>Допуск (%)</th>
-            <th>Цена (₽)</th>
+            <th>#</th>
+            <th>Name</th>
+            <th>Margin (%)</th>
+            <th>Price ($)</th>
             {% if perms.carsdb.change_cars or perms.carsdb.delete_cars %}
-            <th>Действия</th>
+            <th>Actions</th>
             {% endif %}
         </tr>
         </thead>
@@ -23,18 +23,18 @@
             <td>{{ carsm.start_index|add:forloop.counter0 }}</td>
             <td><strong>{{ p.name }}</strong></td>
             <td>{{ p.margin }}%</td>
-            <td>{{ p.price|floatformat:0 }} ₽</td>
+            <td>{{ p.price|floatformat:0 }} $</td>
             {% if perms.carsdb.change_cars or perms.carsdb.delete_cars %}
             <td>
                 <div style="display: flex; gap: 0.5rem; justify-content: center;">
                     {% if perms.carsdb.change_cars %}
                     <a href="{% url 'edit_cars' p.pk %}" class="c-button" style="padding: 0.5rem 1rem; font-size: 0.875rem; text-decoration: none;">
-                        ✏️ Редактировать
+                        ✏️ Edit
                     </a>
                     {% endif %}
                     {% if perms.carsdb.delete_cars %}
                     <a href="{% url 'delete_cars' p.pk %}" class="c-button" style="padding: 0.5rem 1rem; font-size: 0.875rem; text-decoration: none; background: linear-gradient(135deg, var(--error-color), #dc2626);">
-                        🗑️ Удалить
+                        🗑️ Delete
                     </a>
                     {% endif %}
                 </div>
@@ -43,7 +43,7 @@
         </tr>
         {% empty %}
         <tr>
-            <td colspan="{% if perms.carsdb.change_cars or perms.carsdb.delete_cars %}5{% else %}4{% endif %}" class="text-center">Автомобили не найдены</td>
+            <td colspan="{% if perms.carsdb.change_cars or perms.carsdb.delete_cars %}5{% else %}4{% endif %}" class="text-center">No cars found</td>
         </tr>
         {% endfor %}
         </tbody>
@@ -54,21 +54,21 @@
 <div class="pagination-container">
     <div class="pagination">
         {% if carsm.has_previous %}
-            <a href="?page=1" class="pagination-btn" title="Первая страница">⏮️</a>
-            <a href="?page={{ carsm.previous_page_number }}" class="pagination-btn" title="Предыдущая">◀️</a>
+            <a href="?page=1" class="pagination-btn" title="First page">⏮️</a>
+            <a href="?page={{ carsm.previous_page_number }}" class="pagination-btn" title="Previous">◀️</a>
         {% else %}
             <span class="pagination-btn disabled">⏮️</span>
             <span class="pagination-btn disabled">◀️</span>
         {% endif %}
 
         <span class="pagination-info">
-            Страница <strong>{{ carsm.number }}</strong> из <strong>{{ carsm.paginator.num_pages }}</strong>
-            <span class="pagination-count">(Всего автомобилей: {{ carsm.paginator.count }})</span>
+            Page <strong>{{ carsm.number }}</strong> of <strong>{{ carsm.paginator.num_pages }}</strong>
+            <span class="pagination-count">(Total cars: {{ carsm.paginator.count }})</span>
         </span>
 
         {% if carsm.has_next %}
-            <a href="?page={{ carsm.next_page_number }}" class="pagination-btn" title="Следующая">▶️</a>
-            <a href="?page={{ carsm.paginator.num_pages }}" class="pagination-btn" title="Последняя страница">⏭️</a>
+            <a href="?page={{ carsm.next_page_number }}" class="pagination-btn" title="Next">▶️</a>
+            <a href="?page={{ carsm.paginator.num_pages }}" class="pagination-btn" title="Last page">⏭️</a>
         {% else %}
             <span class="pagination-btn disabled">▶️</span>
             <span class="pagination-btn disabled">⏭️</span>

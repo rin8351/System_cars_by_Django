@@ -14,15 +14,17 @@ class AddCars(forms.ModelForm):
         fields = ['name', 'margin', 'parts']
 
     name=forms.CharField(
+        label='Name',
         max_length=100,
         widget=forms.TextInput(attrs={'class': 'form-input'})
     )
     margin=forms.IntegerField(
+        label='Margin',
         min_value=1,
         widget=forms.NumberInput(attrs={'min': '1', 'step': '1', 'class': 'form-input'}),
-        help_text='Допуск должен быть больше 0'
+        help_text='Margin must be greater than 0'
     )
-    parts=CustomParts(queryset=parts.objects.all(), widget=forms.CheckboxSelectMultiple)
+    parts=CustomParts(queryset=parts.objects.all(), widget=forms.CheckboxSelectMultiple, label='Parts')
 
     def create(self, commit=True):
         car = super().save(commit=False)
@@ -38,7 +40,7 @@ class AddCars(forms.ModelForm):
     def clean_margin(self):
         margin = self.cleaned_data.get('margin')
         if margin is not None and margin <= 0:
-            raise forms.ValidationError('Допуск должен быть больше нуля.')
+            raise forms.ValidationError('Margin must be greater than zero.')
         return margin
 
 class AddParts(forms.ModelForm):
@@ -48,24 +50,29 @@ class AddParts(forms.ModelForm):
         fields = ['type', 'model_p','price', 'count_p', 'params']
 
     type=forms.CharField(
+        label='Type',
         max_length=100,
         widget=forms.TextInput(attrs={'class': 'form-input'})
     )
     model_p=forms.CharField(
+        label='Model',
         max_length=100,
         widget=forms.TextInput(attrs={'class': 'form-input'})
     )
     price=forms.IntegerField(
+        label='Price',
         min_value=1,
         widget=forms.NumberInput(attrs={'min': '1', 'step': '1', 'class': 'form-input'}),
-        help_text='Цена должна быть больше 0'
+        help_text='Price must be greater than 0'
     )
     count_p=forms.IntegerField(
+        label='Quantity',
         min_value=1,
         widget=forms.NumberInput(attrs={'min': '1', 'step': '1', 'class': 'form-input'}),
-        help_text='Количество должно быть больше 0'
+        help_text='Quantity must be greater than 0'
     )
     params=forms.CharField(
+        label='Parameters',
         max_length=100,
         widget=forms.TextInput(attrs={'class': 'form-input'})
     )
@@ -73,13 +80,13 @@ class AddParts(forms.ModelForm):
     def clean_price(self):
         price = self.cleaned_data.get('price')
         if price is not None and price <= 0:
-            raise forms.ValidationError('Цена должна быть больше нуля.')
+            raise forms.ValidationError('Price must be greater than zero.')
         return price
     
     def clean_count_p(self):
         count_p = self.cleaned_data.get('count_p')
         if count_p is not None and count_p <= 0:
-            raise forms.ValidationError('Количество должно быть больше нуля.')
+            raise forms.ValidationError('Quantity must be greater than zero.')
         return count_p
 
 

@@ -9,7 +9,7 @@ urlpatterns = [
     path('users/', include('users.urls', namespace='users')),
 ]
 
-# Обработчики ошибок
+# Error handlers
 handler403 = 'carsdb.views.error_403'
 handler404 = 'carsdb.views.error_404'
 handler500 = 'carsdb.views.error_500'
