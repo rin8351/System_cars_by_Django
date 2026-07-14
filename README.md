@@ -4,7 +4,6 @@
 
 [![Python Version](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![Django Version](https://img.shields.io/badge/django-4.2+-green.svg)](https://www.djangoproject.com/)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 ---
 
@@ -312,6 +311,4 @@ python manage.py migrate
 # Collect static files (for production)
 python manage.py collectstatic
 ```
-
----
 
