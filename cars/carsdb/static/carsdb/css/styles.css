@@ -100,15 +100,18 @@ html, body {
     font-weight: 600;
 }
 
-.user-info .logout-link {
-    color: #fecaca;
+.user-info a,
+.user-info a:link,
+.user-info a:visited {
+    color: white;
     text-decoration: none;
-    font-size: 0.875rem;
     transition: var(--transition);
 }
 
-.user-info .logout-link:hover {
+.user-info a:hover {
     color: white;
+    text-decoration: underline;
+    opacity: 0.9;
 }
 
 /* Main Content */
@@ -143,6 +146,68 @@ html, body {
     margin-bottom: 1.5rem;
     padding-bottom: 0.5rem;
     border-bottom: 2px solid var(--border-color);
+}
+
+.table-toolbar {
+    margin-bottom: 1.25rem;
+}
+
+.table-search-form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.table-search-field {
+    position: relative;
+    flex: 1 1 280px;
+    min-width: 220px;
+}
+
+.table-search-icon {
+    position: absolute;
+    left: 0.9rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.95rem;
+    opacity: 0.65;
+    pointer-events: none;
+}
+
+.table-search-input {
+    width: 100%;
+    padding-left: 2.5rem;
+    margin: 0;
+}
+
+.table-search-btn {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.95rem;
+    white-space: nowrap;
+}
+
+.table-search-clear {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.table-search-clear:hover {
+    color: var(--primary-color);
+    text-decoration: underline;
+}
+
+.table-search-meta {
+    margin-top: 0.75rem;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.table-search-meta strong {
+    color: var(--text-primary);
 }
 
 .content-text h3 {
@@ -194,6 +259,36 @@ html, body {
     font-size: 0.875rem;
     letter-spacing: 0.025em;
     text-transform: uppercase;
+}
+
+.simple-little-table th .sort-link,
+.simple-little-table th .sort-link:link,
+.simple-little-table th .sort-link:visited {
+    color: white;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+}
+
+.simple-little-table th .sort-link:hover,
+.simple-little-table th .sort-link:active {
+    color: white;
+    opacity: 0.85;
+    text-decoration: underline;
+}
+
+.simple-little-table th .sort-link.active {
+    color: white;
+    text-decoration: underline;
+}
+
+.simple-little-table th .sort-indicator {
+    font-size: 0.7rem;
+    line-height: 1;
+    opacity: 0.95;
 }
 
 .simple-little-table td {

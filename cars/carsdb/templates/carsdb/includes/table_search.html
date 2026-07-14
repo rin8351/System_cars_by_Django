@@ -1,0 +1,30 @@
+<div class="table-toolbar">
+    <form class="table-search-form" method="get" role="search">
+        <div class="table-search-field">
+            <span class="table-search-icon" aria-hidden="true">🔍</span>
+            <input
+                type="search"
+                name="q"
+                value="{{ search }}"
+                class="form-input table-search-input"
+                placeholder="{{ placeholder }}"
+                aria-label="{{ placeholder }}"
+            >
+        </div>
+        {% if sort_by %}
+        <input type="hidden" name="sort" value="{{ sort_by }}">
+        <input type="hidden" name="dir" value="{{ sort_dir }}">
+        {% endif %}
+        <button type="submit" class="c-button table-search-btn">Search</button>
+        {% if search %}
+        <a href="{% url clear_url_name %}{% if sort_by %}?sort={{ sort_by }}&dir={{ sort_dir }}{% endif %}" class="table-search-clear">Clear</a>
+        {% endif %}
+    </form>
+    {% if search %}
+    <p class="table-search-meta">
+        Found <strong>{{ table_page.paginator.count }}</strong>
+        result{{ table_page.paginator.count|pluralize }}
+        for "<strong>{{ search }}</strong>"
+    </p>
+    {% endif %}
+</div>

@@ -1,0 +1,26 @@
+{% if table_page.has_other_pages %}
+<div class="pagination-container">
+    <div class="pagination">
+        {% if table_page.has_previous %}
+            <a href="?page=1{% if search %}&q={{ search|urlencode }}{% endif %}{% if sort_by %}&sort={{ sort_by }}&dir={{ sort_dir }}{% endif %}" class="pagination-btn" title="First page">⏮️</a>
+            <a href="?page={{ table_page.previous_page_number }}{% if search %}&q={{ search|urlencode }}{% endif %}{% if sort_by %}&sort={{ sort_by }}&dir={{ sort_dir }}{% endif %}" class="pagination-btn" title="Previous">◀️</a>
+        {% else %}
+            <span class="pagination-btn disabled">⏮️</span>
+            <span class="pagination-btn disabled">◀️</span>
+        {% endif %}
+
+        <span class="pagination-info">
+            Page <strong>{{ table_page.number }}</strong> of <strong>{{ table_page.paginator.num_pages }}</strong>
+            <span class="pagination-count">({{ total_label }}: {{ table_page.paginator.count }})</span>
+        </span>
+
+        {% if table_page.has_next %}
+            <a href="?page={{ table_page.next_page_number }}{% if search %}&q={{ search|urlencode }}{% endif %}{% if sort_by %}&sort={{ sort_by }}&dir={{ sort_dir }}{% endif %}" class="pagination-btn" title="Next">▶️</a>
+            <a href="?page={{ table_page.paginator.num_pages }}{% if search %}&q={{ search|urlencode }}{% endif %}{% if sort_by %}&sort={{ sort_by }}&dir={{ sort_dir }}{% endif %}" class="pagination-btn" title="Last page">⏭️</a>
+        {% else %}
+            <span class="pagination-btn disabled">▶️</span>
+            <span class="pagination-btn disabled">⏭️</span>
+        {% endif %}
+    </div>
+</div>
+{% endif %}

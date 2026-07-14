@@ -5,45 +5,105 @@ from django.views.generic import CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib import messages
 from django.db import IntegrityError, DatabaseError
+from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from carsdb.forms import *
 from carsdb.models import *
 
-def parts_f(request):
-    parts_list = parts.objects.all().order_by('-id')
-    paginator = Paginator(parts_list, 15)  # 15 parts per page
-    
+PARTS_SORTABLE = {
+    'type': 'type',
+    'price': 'price',
+    'model': 'model_p',
+    'qty': 'count_p',
+    'params': 'params',
+    'author': 'author__username',
+}
+
+CARS_SORTABLE = {
+    'name': 'name',
+    'margin': 'margin',
+    'price': 'price',
+}
+
+
+def _resolve_sort(request, sortable, default='-id'):
+    """Return order_by field, active column key, and direction for sortable tables."""
+    sort_by = request.GET.get('sort', '')
+    sort_dir = request.GET.get('dir', 'asc')
+    if sort_by not in sortable:
+        return default, '', ''
+    field = sortable[sort_by]
+    if sort_dir == 'desc':
+        return f'-{field}', sort_by, 'desc'
+    return field, sort_by, 'asc'
+
+
+def _get_search_query(request):
+    return request.GET.get('q', '').strip()
+
+
+def _filter_parts(queryset, search):
+    if not search:
+        return queryset
+    filters = (
+        Q(type__icontains=search)
+        | Q(model_p__icontains=search)
+        | Q(params__icontains=search)
+        | Q(author__username__icontains=search)
+    )
+    if search.isdigit():
+        value = int(search)
+        filters |= Q(price=value) | Q(count_p=value)
+    return queryset.filter(filters)
+
+
+def _filter_cars(queryset, search):
+    if not search:
+        return queryset
+    filters = Q(name__icontains=search)
+    if search.isdigit():
+        value = int(search)
+        filters |= Q(margin=value) | Q(price=value)
+    return queryset.filter(filters)
+
+
+def _paginate_queryset(request, queryset, per_page=15):
+    paginator = Paginator(queryset, per_page)
     page = request.GET.get('page')
     try:
-        partsm = paginator.page(page)
+        return paginator.page(page)
     except PageNotAnInteger:
-        # If page is not an integer, show the first page
-        partsm = paginator.page(1)
+        return paginator.page(1)
     except EmptyPage:
-        # If page is out of range, show the last page
-        partsm = paginator.page(paginator.num_pages)
-    
+        return paginator.page(paginator.num_pages)
+
+
+def parts_f(request):
+    search = _get_search_query(request)
+    order_by, sort_by, sort_dir = _resolve_sort(request, PARTS_SORTABLE)
+    parts_list = _filter_parts(parts.objects.all(), search).order_by(order_by)
+    partsm = _paginate_queryset(request, parts_list)
+
     context = {
         'partsm': partsm,
+        'sort_by': sort_by,
+        'sort_dir': sort_dir,
+        'search': search,
     }
     return render(request, 'carsdb/parts.html', context=context)
 
+
 def cars_f(request):
-    cars_list = cars.objects.all().order_by('-id')
-    paginator = Paginator(cars_list, 15)  # 15 cars per page
-    
-    page = request.GET.get('page')
-    try:
-        carsm = paginator.page(page)
-    except PageNotAnInteger:
-        # If page is not an integer, show the first page
-        carsm = paginator.page(1)
-    except EmptyPage:
-        # If page is out of range, show the last page
-        carsm = paginator.page(paginator.num_pages)
-    
+    search = _get_search_query(request)
+    order_by, sort_by, sort_dir = _resolve_sort(request, CARS_SORTABLE)
+    cars_list = _filter_cars(cars.objects.all(), search).order_by(order_by)
+    carsm = _paginate_queryset(request, cars_list)
+
     context = {
         'carsm': carsm,
+        'sort_by': sort_by,
+        'sort_dir': sort_dir,
+        'search': search,
     }
     return render(request, 'carsdb/cars.html', context=context)
 

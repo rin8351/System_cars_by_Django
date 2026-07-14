@@ -4,17 +4,55 @@
 
 <h2>Parts table</h2>
 
+{% include "carsdb/includes/table_search.html" with placeholder="Search by type, model, parameters, author, price..." clear_url_name="parts" table_page=partsm %}
+
 <div class="simple-little-table">
     <table>
         <thead>
         <tr>
             <th>#</th>
-            <th>Type</th>
-            <th>Price ($)</th>
-            <th>Model</th>
-            <th>Qty per car</th>
-            <th>Parameters</th>
-            <th>Author</th>
+            <th>
+                <a href="?sort=type&dir={% if sort_by == 'type' and sort_dir == 'asc' %}desc{% else %}asc{% endif %}{% if search %}&q={{ search|urlencode }}{% endif %}"
+                   class="sort-link{% if sort_by == 'type' %} active{% endif %}">
+                    Type
+                    {% if sort_by == 'type' %}<span class="sort-indicator">{% if sort_dir == 'asc' %}▲{% else %}▼{% endif %}</span>{% endif %}
+                </a>
+            </th>
+            <th>
+                <a href="?sort=price&dir={% if sort_by == 'price' and sort_dir == 'asc' %}desc{% else %}asc{% endif %}{% if search %}&q={{ search|urlencode }}{% endif %}"
+                   class="sort-link{% if sort_by == 'price' %} active{% endif %}">
+                    Price ($)
+                    {% if sort_by == 'price' %}<span class="sort-indicator">{% if sort_dir == 'asc' %}▲{% else %}▼{% endif %}</span>{% endif %}
+                </a>
+            </th>
+            <th>
+                <a href="?sort=model&dir={% if sort_by == 'model' and sort_dir == 'asc' %}desc{% else %}asc{% endif %}{% if search %}&q={{ search|urlencode }}{% endif %}"
+                   class="sort-link{% if sort_by == 'model' %} active{% endif %}">
+                    Model
+                    {% if sort_by == 'model' %}<span class="sort-indicator">{% if sort_dir == 'asc' %}▲{% else %}▼{% endif %}</span>{% endif %}
+                </a>
+            </th>
+            <th>
+                <a href="?sort=qty&dir={% if sort_by == 'qty' and sort_dir == 'asc' %}desc{% else %}asc{% endif %}{% if search %}&q={{ search|urlencode }}{% endif %}"
+                   class="sort-link{% if sort_by == 'qty' %} active{% endif %}">
+                    Qty per car
+                    {% if sort_by == 'qty' %}<span class="sort-indicator">{% if sort_dir == 'asc' %}▲{% else %}▼{% endif %}</span>{% endif %}
+                </a>
+            </th>
+            <th>
+                <a href="?sort=params&dir={% if sort_by == 'params' and sort_dir == 'asc' %}desc{% else %}asc{% endif %}{% if search %}&q={{ search|urlencode }}{% endif %}"
+                   class="sort-link{% if sort_by == 'params' %} active{% endif %}">
+                    Parameters
+                    {% if sort_by == 'params' %}<span class="sort-indicator">{% if sort_dir == 'asc' %}▲{% else %}▼{% endif %}</span>{% endif %}
+                </a>
+            </th>
+            <th>
+                <a href="?sort=author&dir={% if sort_by == 'author' and sort_dir == 'asc' %}desc{% else %}asc{% endif %}{% if search %}&q={{ search|urlencode }}{% endif %}"
+                   class="sort-link{% if sort_by == 'author' %} active{% endif %}">
+                    Author
+                    {% if sort_by == 'author' %}<span class="sort-indicator">{% if sort_dir == 'asc' %}▲{% else %}▼{% endif %}</span>{% endif %}
+                </a>
+            </th>
             {% if perms.carsdb.change_parts or perms.carsdb.delete_parts %}
             <th>Actions</th>
             {% endif %}
@@ -49,38 +87,19 @@
         </tr>
         {% empty %}
         <tr>
-            <td colspan="{% if perms.carsdb.change_parts or perms.carsdb.delete_parts %}8{% else %}7{% endif %}" class="text-center">No parts found</td>
+            <td colspan="{% if perms.carsdb.change_parts or perms.carsdb.delete_parts %}8{% else %}7{% endif %}" class="text-center">
+                {% if search %}
+                    No parts match your search.
+                {% else %}
+                    No parts found
+                {% endif %}
+            </td>
         </tr>
         {% endfor %}
         </tbody>
     </table>
 </div>
 
-{% if partsm.has_other_pages %}
-<div class="pagination-container">
-    <div class="pagination">
-        {% if partsm.has_previous %}
-            <a href="?page=1" class="pagination-btn" title="First page">⏮️</a>
-            <a href="?page={{ partsm.previous_page_number }}" class="pagination-btn" title="Previous">◀️</a>
-        {% else %}
-            <span class="pagination-btn disabled">⏮️</span>
-            <span class="pagination-btn disabled">◀️</span>
-        {% endif %}
-
-        <span class="pagination-info">
-            Page <strong>{{ partsm.number }}</strong> of <strong>{{ partsm.paginator.num_pages }}</strong>
-            <span class="pagination-count">(Total parts: {{ partsm.paginator.count }})</span>
-        </span>
-
-        {% if partsm.has_next %}
-            <a href="?page={{ partsm.next_page_number }}" class="pagination-btn" title="Next">▶️</a>
-            <a href="?page={{ partsm.paginator.num_pages }}" class="pagination-btn" title="Last page">⏭️</a>
-        {% else %}
-            <span class="pagination-btn disabled">▶️</span>
-            <span class="pagination-btn disabled">⏭️</span>
-        {% endif %}
-    </div>
-</div>
-{% endif %}
+{% include "carsdb/includes/table_pagination.html" with table_page=partsm total_label="Total parts" %}
 
 {% endblock content %}
