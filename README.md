@@ -4,6 +4,7 @@
 
 [![Python Version](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![Django Version](https://img.shields.io/badge/django-4.2+-green.svg)](https://www.djangoproject.com/)
+[![Tests](https://github.com/rin8351/System_cars_by_Django/actions/workflows/tests.yml/badge.svg)](https://github.com/rin8351/System_cars_by_Django/actions/workflows/tests.yml)
 
 ---
 
@@ -260,6 +261,7 @@ System_cars_by_Django/
 │   │   ├── forms.py           # Forms for creating objects
 │   │   ├── admin.py           # Admin panel settings
 │   │   ├── urls.py            # Application URL routes
+│   │   ├── tests/             # Automated tests (models, forms, views)
 │   │   ├── templates/         # HTML templates
 │   │   └── static/            # CSS, JS, images
 │   └── manage.py              # Django management utility
@@ -269,6 +271,58 @@ System_cars_by_Django/
 └── README.md                  # This file
 ```
 
+
+## Tests
+
+The project includes automated tests for models, forms, and views (including access permissions).
+Django creates a temporary test database, runs the checks, then deletes it — your real data is not touched.
+
+### Run all tests
+
+From the `cars/` directory (where `manage.py` is):
+
+```bash
+python manage.py test
+```
+
+### Useful variants
+
+```bash
+# Only the carsdb app
+python manage.py test carsdb
+
+# Only one file (e.g. price calculation)
+python manage.py test carsdb.tests.test_models
+
+# One test class
+python manage.py test carsdb.tests.test_models.CarsPriceCalculationTests
+
+# One test method
+python manage.py test carsdb.tests.test_models.CarsPriceCalculationTests.test_price_recalculated_on_save_with_parts
+
+# More detailed output
+python manage.py test carsdb -v 2
+```
+
+### What is covered
+
+| File | What it checks |
+|------|----------------|
+| `tests/test_models.py` | Part/car string representation, automatic price calculation, signals, unique car–part links |
+| `tests/test_forms.py` | Validation (positive price/quantity/margin), creating a car with part links |
+| `tests/test_views.py` | Public pages, search, login and permission checks for add/edit/delete |
+
+### CI (GitHub Actions)
+
+On every push and pull request to `main`, GitHub automatically runs the test suite.
+Workflow file: [`.github/workflows/tests.yml`](.github/workflows/tests.yml).
+
+**Where to see the results:**
+1. Open the repository on GitHub → tab **Actions**
+2. Or open a commit / PR — look for a green check ✅ or red cross ❌ next to the commit
+3. The badge at the top of this README also shows the latest status
+
+---
 
 ## Administration
 
@@ -310,5 +364,8 @@ python manage.py migrate
 
 # Collect static files (for production)
 python manage.py collectstatic
+
+# Run automated tests
+python manage.py test
 ```
 
