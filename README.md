@@ -55,6 +55,8 @@ A web application for managing an auto service or car dealership that allows:
 
 
 9. **Django Admin Panel** — available only to administrator from the site menu
+
+10. **REST API (DRF)** — JSON API for parts with list, detail, create, update, delete, search, and pagination
 ---
 
 ### Database Support
@@ -259,9 +261,12 @@ System_cars_by_Django/
 │   │   ├── models.py          # Data models (Parts, Cars, CarPart)
 │   │   ├── views.py           # Views (request handling logic)
 │   │   ├── forms.py           # Forms for creating objects
+│   │   ├── serializers.py     # DRF serializers for the API
+│   │   ├── api_views.py       # REST API viewsets
+│   │   ├── api_urls.py        # API URL routes
 │   │   ├── admin.py           # Admin panel settings
 │   │   ├── urls.py            # Application URL routes
-│   │   ├── tests/             # Automated tests (models, forms, views)
+│   │   ├── tests/             # Automated tests (models, forms, views, API)
 │   │   ├── templates/         # HTML templates
 │   │   └── static/            # CSS, JS, images
 │   └── manage.py              # Django management utility
@@ -269,6 +274,48 @@ System_cars_by_Django/
 ├── Dockerfile                 # Instructions for building Docker image
 ├── requirements.txt           # Python dependencies
 └── README.md                  # This file
+```
+
+
+## REST API (Django REST Framework)
+
+JSON API for the parts catalog. Existing HTML pages are unchanged.
+
+| Method | URL | Who can use it |
+|--------|-----|----------------|
+| `GET` | `/api/parts/` | Anyone (list + pagination) |
+| `GET` | `/api/parts/{id}/` | Anyone (one part) |
+| `POST` | `/api/parts/` | Logged-in user with `add_parts` |
+| `PUT` / `PATCH` | `/api/parts/{id}/` | Logged-in user with `change_parts` |
+| `DELETE` | `/api/parts/{id}/` | Logged-in user with `delete_parts` |
+
+Useful query params for the list:
+- `?search=engine` — search by type, model, params, author
+- `?ordering=price` or `?ordering=-price` — sort
+- `?page=2` — pagination (15 items per page)
+
+### How to try it
+
+1. Start the server: `python manage.py runserver` (from `cars/`)
+2. **In the browser:** open http://127.0.0.1:8000/api/parts/  
+   DRF shows a browsable HTML page with JSON. To create/edit, log in first at http://127.0.0.1:8000/login/ (user needs the matching permissions), then return to the API page and use the form at the bottom.
+3. **From the command line** (GET works without login):
+
+```bash
+# List parts
+curl http://127.0.0.1:8000/api/parts/
+
+# One part (replace 1 with a real id)
+curl http://127.0.0.1:8000/api/parts/1/
+
+# Search
+curl "http://127.0.0.1:8000/api/parts/?search=engine"
+```
+
+On Windows PowerShell you can use:
+
+```powershell
+Invoke-RestMethod http://127.0.0.1:8000/api/parts/
 ```
 
 
@@ -311,6 +358,7 @@ python manage.py test carsdb -v 2
 | `tests/test_models.py` | Part/car string representation, automatic price calculation, signals, unique car–part links |
 | `tests/test_forms.py` | Validation (positive price/quantity/margin), creating a car with part links |
 | `tests/test_views.py` | Public pages, search, login and permission checks for add/edit/delete |
+| `tests/test_api.py` | REST API for parts: list/detail, search, CRUD permissions, validation |
 
 ### CI (GitHub Actions)
 

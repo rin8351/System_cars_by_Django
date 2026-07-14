@@ -1,6 +1,9 @@
 # Core Django
 Django>=4.2,<5.0
 
+# REST API
+djangorestframework>=3.14,<3.16
+
 # Database drivers
 psycopg2-binary>=2.9.9  # PostgreSQL (binary version, easier to install)
 
