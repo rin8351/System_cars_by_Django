@@ -123,9 +123,9 @@ python manage.py load_demo_data
 ```
 
 This command will create:
-- ✅ 21 parts (engines, transmissions, bodies, wheels, interiors, etc.)
-- ✅ 5 cars with various configurations
-- ✅ All necessary relationships between cars and parts
+- 21 parts (engines, transmissions, bodies, wheels, interiors, etc.)
+- 5 cars with various configurations
+- All necessary relationships between cars and parts
 
 Useful options:
 ```bash
@@ -199,7 +199,7 @@ The application will be available at: **http://localhost:8000/**
 
 ---
 
-## 📖 Usage
+## Usage
 
 ### Main URL Addresses:
 
